@@ -1,0 +1,2 @@
+1. To open website, go dist/index.html
+2. "src" folder contains javascripts source code
