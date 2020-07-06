@@ -13,7 +13,10 @@ export const elements = {
     closePayformButton: document.querySelector('.payform-close'),
     container: document.querySelector('.container'),
     payButton: document.querySelector('[data-modal-target]'),
-    popup: document.querySelector('.popup')
+    popup: document.querySelector('.popup'),
+    registerBtn: document.getElementById('register-btn'),
+    loginForm: document.getElementById('login-form'),
+    registerForm: document.getElementById('register-form'),
 };
 //<script type="text/javascript" src="js/bundle.js"></script></body>
 export const elementStrings = {

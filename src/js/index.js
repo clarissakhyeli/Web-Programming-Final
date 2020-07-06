@@ -44,22 +44,24 @@ const controlSearch = async () => {
     }
 }
 
-elements.searchForm.addEventListener('submit', e => {
-    e.preventDefault();
-    controlSearch();
-});
+if(elements.searchForm !== null){
+    elements.searchForm.addEventListener('submit', e => {
+        e.preventDefault();
+        controlSearch();
+    });
+}
 
-
-elements.searchResPages.addEventListener('click', e => {
-    const btn = e.target.closest('.btn-inline');
-    if (btn) {
-        searchView.clearButton();
-        const goToPage = parseInt(btn.dataset.goto, 10);
-        searchView.clearResults();
-        searchView.renderResults(state.search.result, goToPage);
-    }
-});
-
+if(elements.searchResPages !== null){
+    elements.searchResPages.addEventListener('click', e => {
+        const btn = e.target.closest('.btn-inline');
+        if (btn) {
+            searchView.clearButton();
+            const goToPage = parseInt(btn.dataset.goto, 10);
+            searchView.clearResults();
+            searchView.renderResults(state.search.result, goToPage);
+        }
+    });
+}
 
 /** 
  * RECIPE CONTROLLER
@@ -113,19 +115,21 @@ const controlList = () => {
 }
 
 // Handle delete and update list item events
-elements.shopping.addEventListener('click', e => {
-    const id = e.target.closest('.shopping__item').dataset.itemid;
-
-    // Handle the delete button
-    if (e.target.matches('.shopping__delete, .shopping__delete *')) {
-        // Delete from state
-        state.list.deleteItem(id);
-
-        // Delete from UI
-        listView.deleteItem(id);
-        listView.renderTotal(state.list.total);
-    }
-});
+if(elements.shopping !== null){
+    elements.shopping.addEventListener('click', e => {
+        const id = e.target.closest('.shopping__item').dataset.itemid;
+    
+        // Handle the delete button
+        if (e.target.matches('.shopping__delete, .shopping__delete *')) {
+            // Delete from state
+            state.list.deleteItem(id);
+    
+            // Delete from UI
+            listView.deleteItem(id);
+            listView.renderTotal(state.list.total);
+        }
+    });
+}
 
 
 /** 
@@ -181,38 +185,42 @@ window.addEventListener('load', () => {
     state.likes.likes.forEach(like => likesView.renderLike(like));
 });
 
-elements.closeModalButton.addEventListener('click', e => {
-    const modal = elements.closeModalButton.closest('.modal');
-    closeModal(modal);
-});
+if(elements.closeModalButton !== null){
+    elements.closeModalButton.addEventListener('click', e => {
+        const modal = elements.closeModalButton.closest('.modal');
+        closeModal(modal);
+    });
+}
 
-elements.popup.addEventListener('click', e => {
-    console.log(e.target.parentElement);
-    if (e.target.className == 'btn back-btn') {
-        const shipForm = elements.popup.firstElementChild;
-        closeModal(shipForm);
-    }else if(e.target.className == 'btn next-btn to-payform'){
-        const shipForm = elements.popup.firstElementChild;
-        if(validateShipForm()){
-            recipeView.renderPayform(state.list.total);
-        }else{
-            alert("Please fill in the form");
+if(elements.popup !== null){
+    elements.popup.addEventListener('click', e => {
+        console.log(e.target.parentElement);
+        if (e.target.className == 'btn back-btn') {
+            const shipForm = elements.popup.firstElementChild;
+            closeModal(shipForm);
+        }else if(e.target.className == 'btn next-btn to-payform'){
+            const shipForm = elements.popup.firstElementChild;
+            if(validateShipForm()){
+                recipeView.renderPayform(state.list.total);
+            }else{
+                alert("Please fill in the form");
+            }
+        }else if(e.target.className == 'btn back-btn to-shipform'){
+            recipeView.renderShippingform();
+        }else if(e.target.className == 'btn next-btn'){
+            const payform = elements.popup.firstElementChild;
+            if(validateForm()){
+                recipeView.renderSuccessMessage();
+                closeModal(payform);
+            }else{
+                alert("Please fill in the form");
+            }
+        }else if(e.target.parentElement.className == 'toast__close'){
+            const msg = elements.popup.firstElementChild;
+            closeModal(msg);
         }
-    }else if(e.target.className == 'btn back-btn to-shipform'){
-        recipeView.renderShippingform();
-    }else if(e.target.className == 'btn next-btn'){
-        const payform = elements.popup.firstElementChild;
-        if(validateForm()){
-            recipeView.renderSuccessMessage();
-            closeModal(payform);
-        }else{
-            alert("Please fill in the form");
-        }
-    }else if(e.target.parentElement.className == 'toast__close'){
-        const msg = elements.popup.firstElementChild;
-        closeModal(msg);
-    }
-});
+    });
+}
 
 function validateShipForm() {
     var valid = true;
@@ -256,12 +264,14 @@ function validateForm() {
     return valid;
 }
 
-elements.container.addEventListener('click', () =>{
-    const modals = document.querySelectorAll('.modal');
-    modals.forEach(modal => {
-        closeModal(modal);
+if(elements.container !== null){
+    elements.container.addEventListener('click', () =>{
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            closeModal(modal);
+        })
     })
-})
+}
 
 function openModal(modal) {
     return modal.classList.add('active');
@@ -272,43 +282,62 @@ function closeModal(modal) {
 }
 
 // Handling recipe button clicks
-elements.recipe.addEventListener('click', e => {
-    if (e.target.matches('.btn-decrease, .btn-decrease *')) {
-        // Decrease button is clicked
-        if (state.recipe.servings > 1) {
-            state.recipe.updateServings('dec');
+if(elements.recipe !== null){
+    elements.recipe.addEventListener('click', e => {
+        if (e.target.matches('.btn-decrease, .btn-decrease *')) {
+            // Decrease button is clicked
+            if (state.recipe.servings > 1) {
+                state.recipe.updateServings('dec');
+                recipeView.updateServingsIngredients(state.recipe);
+            }
+        }else if (e.target.matches('.btn-decrease-size, .btn-decrease-size *')) {
+            // Decrease button is clicked
+            if(state.recipe.size != "XXS"){
+                state.recipe.updateSize('dec');
+                recipeView.updateServingsIngredients(state.recipe);
+            }
+        }  else if (e.target.matches('.btn-increase, .btn-increase *')) {
+            // Increase button is clicked
+            state.recipe.updateServings('inc');
             recipeView.updateServingsIngredients(state.recipe);
+        }else if (e.target.matches('.btn-increase-size, .btn-increase-size *')) {
+            // Increase button is clicked
+            if(state.recipe.size != "XXL"){
+                state.recipe.updateSize('inc');
+                recipeView.updateServingsIngredients(state.recipe);
+            }
+        } else if (e.target.matches('.recipe__btn--add, .recipe__btn--add *')) {
+            // Add product to shopping list
+            controlList();
+            
+        } else if (e.target.matches('.recipe__love, .recipe__love *')) {
+            // Like controller
+            controlLike();
         }
-    }else if (e.target.matches('.btn-decrease-size, .btn-decrease-size *')) {
-        // Decrease button is clicked
-        if(state.recipe.size != "XXS"){
-            state.recipe.updateSize('dec');
-            recipeView.updateServingsIngredients(state.recipe);
-        }
-    }  else if (e.target.matches('.btn-increase, .btn-increase *')) {
-        // Increase button is clicked
-        state.recipe.updateServings('inc');
-        recipeView.updateServingsIngredients(state.recipe);
-    }else if (e.target.matches('.btn-increase-size, .btn-increase-size *')) {
-        // Increase button is clicked
-        if(state.recipe.size != "XXL"){
-            state.recipe.updateSize('inc');
-            recipeView.updateServingsIngredients(state.recipe);
-        }
-    } else if (e.target.matches('.recipe__btn--add, .recipe__btn--add *')) {
-        // Add product to shopping list
-        controlList();
-        
-    } else if (e.target.matches('.recipe__love, .recipe__love *')) {
-        // Like controller
-        controlLike();
-    }
-});
+    });
+}
+
 
 
 //Pay Button
-elements.payButton.addEventListener('click', e => {
-    if(state.list.total != undefined){
-        recipeView.renderShippingform();
-    }
-});
+if(elements.payButton !== null){
+    elements.payButton.addEventListener('click', e => {
+        if(state.list.total != undefined){
+            recipeView.renderShippingform();
+        }
+    });
+}
+
+if(elements.registerBtn !== null){
+    elements.registerBtn.addEventListener('click', e => {
+        event.preventDefault();
+        elements.registerForm.style.display="block";
+        elements.loginForm.style.display="none";
+    });
+}
+
+if(elements.loginForm !== null){
+    elements.loginForm.addEventListener("submit", function(e){
+    });
+}
+
